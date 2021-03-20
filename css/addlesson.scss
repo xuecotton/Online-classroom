@@ -1,0 +1,367 @@
+$themeColor:#45a1d7;
+$themeColordeep:#3c8dbc;
+
+* {
+    padding: 0;
+    margin: 0;
+}
+
+#app {
+    // min-width: 1220px;
+    height: 100%;
+    padding: 20px;
+    background-color: #f5f5f5;
+}
+
+li {
+    list-style: none;
+}
+
+
+.themeColor {
+    background-color: $themeColor !important;
+    color: #fff !important;
+
+}
+
+.themeColor:hover {
+    background-color: $themeColordeep !important;
+
+}
+
+.line {
+    width: 100%;
+    height: 1px;
+    margin: 10px 0;
+    background: #ddd;
+}
+
+.defaultSize {
+    font-size: 18px;
+    margin: 0 5px;
+}
+
+.content {
+    background: #fff;
+    padding: 20px;
+}
+
+.el-upload,
+.upload-demo {
+    width: 830px;
+    // height: 284px;
+    margin: 120px auto 240px;
+}
+
+.el-upload-dragger {
+    width: 100%;
+    height: 284px;
+}
+.el-button{
+    border-radius: 0;
+}
+
+.video {
+    max-width: 1220px;
+
+    .title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #4c4c4c;
+        margin: 0 0 10px 0;
+
+        span {
+            font-size: 14px;
+            margin-left: 10px;
+        }
+    }
+
+    .videoInfo {
+        display: flex;
+
+
+        div {
+            width: 100%;
+            font-size: 14px;
+            font-weight: normal;
+            position: relative;
+
+            span {
+                font-size: 12px;
+                margin-left: 0;
+            }
+        }
+
+        img {
+            width: 50px;
+            height: 40px;
+            object-fit: contain;
+            margin-right: 10px;
+        }
+
+        .el-progress {
+            width: 100%;
+            // max-width: 800px;
+        }
+
+        .el-progress__text {
+            width: 40px;
+            float: right;
+        }
+
+        .del {
+            position: absolute;
+            font-size: 25px;
+            right: 10px;
+            top: 0;
+            cursor: pointer;
+        }
+    }
+}
+
+.del:hover {
+    color: #3c8dbc
+}
+
+.details {
+    @extend .video;
+    margin-top: 25px;
+    min-width: 867px
+}
+
+i {
+    font-size: 18px;
+}
+
+.item {
+    display: flex;
+    margin: 15px 0;
+
+    >div:last-child {
+        width: 100%;
+        max-width: 767px;
+    }
+
+    .el-input__inner {
+        border-radius: 0;
+        border-right: none;
+    }
+
+    .el-input-group__append {
+        background: #fff;
+        border-radius: 0;
+    }
+    .el-checkbox__inner{
+        border-color: #4c4c4c;
+        border-radius: 50%;
+    }
+    .el-checkbox{
+        color: #000;
+    }
+}
+
+.el-input__inner:focus~div {
+    border-color: #45a1d7;
+}
+
+.item_title {
+    min-width: 100px;
+}
+.no_point::before {
+    content: "";
+    margin-right: 14px;
+}
+.red_point::before {
+    content: "*";
+    color: #f56c6c;
+    margin-right: 0;
+}
+
+.post {
+    width: 100%;
+    max-width: 767px;
+    height: 164px;
+    display: flex;
+
+    >div {
+        margin-right: 20px;
+
+        >img {
+            width: 223px;
+            height: 164px;
+            object-fit: cover;
+        }
+
+    }
+
+}
+
+.post_select {
+    width: 516px;
+    height: 110px;
+    border: 1px solid #ddd;
+    margin-top: 8px;
+
+    span {
+        display: block;
+        font-size: 12px;
+        margin: 5px 0 10px 10px;
+        color: #999999;
+    }
+
+    ul {
+        width: 100%;
+        padding: 0;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        // flex-wrap: wrap;
+
+        li {
+            width: 110px;
+            height: 68px;
+            margin: 10px;
+            position: relative;
+
+            .select_icon {
+                position: absolute;
+                width: 30px;
+                height: 30px;
+                object-fit: cover;
+                bottom: -1px;
+                right: -1px;
+            }
+
+            img {
+                width: 100%;
+                height: 100%;
+            }
+        }
+    }
+}
+
+/*
+题目样式
+*/ 
+.sub_box{
+    // height: 100px;
+    margin: 20px 0;
+    padding:0 20px;
+    border: 1px solid #ddd;
+    >div{
+        padding: 25px 0;
+        // border-bottom: 2px solid #409EFF;
+        position: relative;
+    }
+    >div>div{
+        font-size: 18px;
+        font-weight: 600;
+        color: #45a1d7;
+        line-height: 30px;
+        .el-input{
+            width: 70px;
+        }
+        .el-input__inner{
+            border-right: 1px solid ;
+            border-color: #DCDFE6;
+            background-color: #f7f8fa;
+        }
+        .el-input__inner:focus{
+            border-color: #409EFF;
+        }
+        span{
+            font-size: 14px;
+            font-weight: normal;
+            color: #4c4c4c;
+            display: inline-block;
+        }
+    }
+
+    .addSub{
+       position: absolute;
+       top: 25px;
+       right: 0;
+    }
+    thead{
+        line-height: 0;
+    }
+    .cell span{
+        width: 23px;
+        height: 23px;
+        text-align: center;
+        line-height: 23px;
+        background: #45a1d7;
+        color: #fff;
+    }
+    .cell{
+        color: #4c4c4c;
+    }
+    .icon{
+        margin: 0 5x;
+    }
+    .icon:hover{
+        cursor: pointer;
+        color: #45a1d7;
+    }
+    .el-table__row>td:nth-child(3){
+        font-size: 16px;
+        font-weight: normal;
+        color: #ddd;
+    }
+
+}
+
+/*
+弹框样式
+*/ 
+.el-dialog__body{
+    padding: 30px;
+    font-size: 16px;
+
+}
+.dia{
+    display: flex;
+    margin: 10px 0;
+}
+.dia_title {
+    @extend .item_title;
+    ~div{
+        width: 100%;
+        .el-radio-group:nth-child(2){
+            margin-left: 100px;
+        }
+    }
+
+}
+.dia_detail{
+    width: 670px;
+    height: auto;
+    border: 1px solid #ddd;
+    padding: 20px;
+    >div{
+        display: flex;
+        margin-bottom: 10px;
+        >span{
+            width: 80px;
+            margin-right: 20px;
+        }
+        >span~div{
+            width: 100%;
+        }
+        ul{
+            // width: 100%;
+            li {
+                display: flex;
+                justify-content: space-around;
+                margin-bottom: 10px;
+                span{
+                    margin-right: 10px;
+                }
+            }
+        }
+    }
+    .el-textarea__inner {
+        border-radius: 0;
+    }
+
+}

@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>主页</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.0.2/dist/echarts.min.js"></script>
+    <link rel="stylesheet" href="./element_ui/element.css">
+    <link rel="stylesheet" href="./css/index.css">
+</head>
+
+<body>
+    <div id="app">
+        <header class="header">
+            <div class="top">
+                <div>
+                    <span>2021年03月18日</span>
+                    <span>星期四</span>
+                </div>
+                <div v-if="isLogin">
+                    <div>
+                        <i class="el-icon-user-solid"></i>
+                        <span>admin</span>
+                    </div>
+                    <div>
+                        <i class="el-icon-switch-button"></i>
+                        <span>退出</span>
+                    </div>
+                </div>
+                <div v-else>
+                    <div>
+                        <i class="el-icon-s-platform"></i>
+                        <span>登录</span>
+                    </div>
+                </div>
+            </div>
+            <div class="bottom">
+                <div class="title">线场教学管理</div>
+            </div>
+        </header>
+        <main>
+            <div class="left">
+                <div class="l_top">
+                    <div class="title">宿舍考勤</div>
+                    <div>
+                        <div class="tit">
+                            校内宿舍签到
+                        </div>
+                        <div>
+                            <div>
+                                <div class="btn " :class="{btnAct:schoolActBtn == 1}" @click="changeSchoolAct(1)"> 本周
+                                </div>
+                                <div class="btn" :class="{btnAct:schoolActBtn == 2}" @click="changeSchoolAct(2)">本月
+                                </div>
+                                <div class="btn" :class="{btnAct:schoolActBtn == 3}" @click="changeSchoolAct(3)">本年
+                                </div>
+                            </div>
+                            <div class="sig_pia" id="pia1">
+
+                            </div>
+                            <div>
+                                <div class="num num2">9873</div>
+                                <span>应到人数</span>
+                                <i></i>
+                                <div class="num num2">9527</div>
+                                <span>已签到人数</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="tit">校外宿舍签到</div>
+                        <div>
+                            <div>
+                                <div class="btn " :class="{btnAct:outActBtn == 1}" @click="changeOutAct(1)"> 本周</div>
+                                <div class="btn" :class="{btnAct:outActBtn == 2}" @click="changeOutAct(2)">本月</div>
+                                <div class="btn" :class="{btnAct:outActBtn == 3}" @click="changeOutAct(3)">本年</div>
+                            </div>
+                            <div class="sig_pia" id="pia2">
+
+                            </div>
+                            <div>
+                                <div class="num num2">1960</div>
+                                <span>应到人数</span>
+                                <i></i>
+                                <div class="num num2">120</div>
+                                <span>已签到人数</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="l_bottom">
+                    <div class="title"> <i class="el-icon-bell"></i> 今日报警列表(设备)</div>
+                    <div class="tab_tit">
+                        <div>时间</div>
+                        <div>设备编号</div>
+                        <div>原由</div>
+                    </div>
+                    <vue-seamless-scroll :data="dataList" :step="1" class="seamless-warp">
+                        <ul class="l_scroll">
+                            <li v-for="item in dataList">
+                                <div>{{item.date}}</div>
+                                <div>{{item.name}}</div>
+                                <div>{{item.reason}}</div>
+                            </li>
+                        </ul>
+                    </vue-seamless-scroll>
+                </div>
+            </div>
+            <div class="center">
+                <div class="c_top">
+                    <div class="num">
+                        <div>全校人数</div>
+                        <ul>
+                            <li>1</li>
+                            <li>9</li>
+                            <li>9</li>
+                            <li>9</li>
+                            <li>9</li>
+                        </ul>
+                    </div>
+                    <div class="pieNum">
+                        <div id="pia3"></div>
+                        <a class="num3">
+                            <span>1960</span>
+                            <span>校内人数</span>
+                        </a>
+                        <div id="pia4"></div>
+                        <a class="num3">
+                            <span>1960</span>
+                            <span>教学点人数</span>
+                        </a>
+                        <div id="pia5"></div>
+                        <a class="num3">
+                            <span>1960</span>
+                            <span>未在校人数</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="c_bottom">
+                    <div>
+                        <div class="title">教学签到</div>
+                        <div class="btn_list">
+                            <div class="btn_group">
+                                <div :class="{btn_g_act:lesson_atten.isInner}" @click="changePositionAtten(1,true)">校内
+                                </div>
+                                <div :class="{btn_g_act:!lesson_atten.isInner}" @click="changePositionAtten(1,false)">
+                                    校外
+                                </div>
+                            </div>
+                            <div class="btn_group">
+                                <div :class="{btn_g_act:lesson_atten.cycle === 'day'}"
+                                    @click="changeCycleAtten(1,'day')">本周</div>
+                                <div :class="{btn_g_act:lesson_atten.cycle === 'mounth'}"
+                                    @click="changeCycleAtten(1,'mounth')">本月</div>
+                                <div :class="{btn_g_act:lesson_atten.cycle === 'year'}"
+                                    @click="changeCycleAtten(1,'year')">本年</div>
+                            </div>
+                        </div>
+                        <div class="line_pic" id="line1"></div>
+                    </div>
+                    <div>
+                        <div class="title">教学巡课</div>
+                        <div class="btn_list">
+                            <div class="btn_group">
+                                <div :class="{btn_g_act:teach_atten.isInner}" @click="changePositionAtten(2,true)">校内
+                                </div>
+                                <div :class="{btn_g_act:!teach_atten.isInner}" @click="changePositionAtten(2,false)">
+                                    校外</div>
+                            </div>
+                            <div class="btn_group">
+                                <div :class="{btn_g_act:teach_atten.cycle === 'day'}"
+                                    @click="changeCycleAtten(2,'day')">本周</div>
+                                <div :class="{btn_g_act:teach_atten.cycle === 'mounth'}"
+                                    @click="changeCycleAtten(2,'mounth')">本月</div>
+                                <div :class="{btn_g_act:teach_atten.cycle === 'year'}"
+                                    @click="changeCycleAtten(2,'year')">本年</div>
+                            </div>
+                        </div>
+                        <div class="line_pic" id="line2"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="right">
+                <div class="title">想个标题</div>
+                <div>
+                    <vue-seamless-scroll :data="dataList" :step="1" class="seamless-warp2">
+                        <ul class="r_scroll">
+                            <li v-for="item in dataList">
+                                <img :src="item.pic" alt="">
+                                <div>编号：{{item.name}}</div>
+                                <div>时间：{{item.date}}</div>
+                                <div>位置：{{item.reason}}</div>
+                            </li>
+                        </ul>
+                    </vue-seamless-scroll>
+                </div>
+            </div>
+        </main>
+    </div>
+
+
+
+
+    <script src="./element_ui/vue.js"></script>
+    <script src="./js/rem.js"></script>
+    <script src="./element_ui/element.js"></script>
+    <script src="./js/vue-seamless-scroll.min.js"></script>
+    <script src="./js/echarts.min.js"></script>
+    <!-- <script>
+        option1 = {
+            color: ["#9e7409", "#efb013"],
+            // legend: {
+            //     orient: 'vertical',
+            //     right: 0,
+            //     data: ['已签到', '未签到'],
+            //     textStyle: {
+            //         fontSize: 18,//字体大小
+            //         color: '#ffffff'//字体颜色
+            //     },
+            // },
+            left: '0',
+            series: [
+                {
+                    name: '校内宿舍签到',
+                    type: 'pie',
+                    radius: ['50%', '90%'],
+                    // selectedMode: 'single',
+                    avoidLabelOverlap: false,
+                    right: '0',
+                    label: {
+                        normal: {
+                            formatter: '({d}%)',
+                            textStyle: {
+                                fontWeight: 'normal',
+                                fontSize: 20,
+                                fontWeight: 'bold',
+                            },
+                            position: "center"
+                        }
+                    },
+                    emphasis: {
+                        label: {
+                            show: false,
+                            fontSize: '20',
+                            fontWeight: 'bold',
+                        }
+                    },
+
+                    // labelLine: {
+                    //     show: true
+                    // },
+                    data: [
+                        { value: 5742, name: '已签到' },
+                        { value: 1482, name: '未签到' }
+                    ]
+                }
+            ]
+        };
+        option11 = {
+            color: ["#79099e", "#c440ef"],
+            // legend: {
+            //     orient: 'vertical',
+            //     right: 0,
+            //     data: ['已签到', '未签到'],
+            //     textStyle: {
+            //         fontSize: 18,//字体大小
+            //         color: '#ffffff'//字体颜色
+            //     },
+            // },
+            left: '0',
+            series: [
+                {
+                    name: '校内宿舍签到',
+                    type: 'pie',
+                    radius: ['50%', '90%'],
+                    // selectedMode: 'single',
+                    avoidLabelOverlap: false,
+                    right: '0',
+                    label: {
+                        normal: {
+                            formatter: '({d}%)',
+                            textStyle: {
+                                fontWeight: 'normal',
+                                fontSize: 20,
+                                fontWeight: 'bold',
+                            },
+                            position: "center"
+                        }
+                    },
+                    emphasis: {
+                        label: {
+                            show: false,
+                            fontSize: '20',
+                            fontWeight: 'bold',
+                        }
+                    },
+
+                    // labelLine: {
+                    //     show: true
+                    // },
+                    data: [
+                        { value: 5742, name: '已签到' },
+                        { value: 1482, name: '未签到' }
+                    ]
+                }
+            ]
+        };
+        option2 = {
+            color: ["#ec1c24", "#094c9e"],
+            legend: {
+                data: ['已签到', '未签到'],
+                textStyle: {
+                    fontSize: 18,//字体大小
+                    color: '#ffffff'//字体颜色
+                },
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross',
+                    label: {
+                        backgroundColor: '#6a7985'
+                    }
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            toolbox: {
+                feature: {
+                    saveAsImage: {}
+                }
+            },
+            xAxis: [{
+                type: 'category',
+                boundaryGap: false,
+                data: ['03-11', '03-12', '03-13', '03-14', '03-15', '03-16', '03-17'],
+                axisLabel: {
+                    show: true,
+                    textStyle: {
+                        color: '#ffffff',
+                        fontSize: 12
+                    }
+                }
+            }],
+            yAxis: [{
+                type: 'value',
+                axisLabel: {
+                    show: true,
+                    textStyle: {
+                        color: '#ffffff',
+                        fontSize: 14
+                    }
+                }
+            }],
+            series: [
+                {
+                    name: '已签到',
+                    type: 'line',
+                    // stack: '总量',
+                    areaStyle: {},
+                    data: [220, 182, 191, 234, 290, 330, 310],
+                    label: {
+                        normal: {
+                            show: true,
+                            position: 'top'
+                        }
+                    },
+
+                },
+
+                {
+                    name: '未签到',
+                    type: 'line',
+                    // stack: '总量',
+                    areaStyle: {},
+                    data: [120, 80, 79, 126, 190, 215, 210],
+                    label: {
+                        normal: {
+                            show: true,
+                            position: 'top'
+                        }
+                    },
+                }]
+        };
+        option22 = {
+            color: ["#ec1c24", "#094c9e"],
+            legend: {
+                data: ['有课', '无课'],
+                textStyle: {
+                    fontSize: 18,//字体大小
+                    color: '#ffffff'//字体颜色
+                },
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross',
+                    label: {
+                        backgroundColor: '#6a7985'
+                    }
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            toolbox: {
+                feature: {
+                    saveAsImage: {}
+                }
+            },
+            xAxis: [{
+                type: 'category',
+                boundaryGap: false,
+                data: ['03-11', '03-12', '03-13', '03-14', '03-15', '03-16', '03-17'],
+                axisLabel: {
+                    show: true,
+                    textStyle: {
+                        color: '#ffffff',
+                        fontSize: 12
+                    }
+                }
+            }],
+            yAxis: [{
+                type: 'value',
+                axisLabel: {
+                    show: true,
+                    textStyle: {
+                        color: '#ffffff',
+                        fontSize: 14
+                    }
+                }
+            }],
+            series: [
+                {
+                    name: '有课',
+                    type: 'line',
+                    // stack: '总量',
+                    areaStyle: {},
+                    data: [290, 230, 320, 334, 390, 370, 455],
+                    label: {
+                        normal: {
+                            show: true,
+                            position: 'top'
+                        }
+                    },
+
+                },
+
+                {
+                    name: '无课',
+                    type: 'line',
+                    // stack: '总量',
+                    areaStyle: {},
+                    data: [120, 80, 178, 190, 230, 235, 300],
+                    label: {
+                        normal: {
+                            show: true,
+                            position: 'top'
+                        }
+                    },
+                }]
+        };
+
+
+        // 使用刚指定的配置项和数据显示图表。
+        mypia1.setOption(option);
+        mypia2.setOption(option);
+        mypia3.setOption(option);
+        mypia4.setOption(option1);
+        mypia5.setOption(option11);
+        line1.setOption(option2);
+        line2.setOption(option22);
+    </script> -->
+
+    <script src="./js/index.js"></script>
+
+</body>
+
+</html>

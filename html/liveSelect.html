@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>开始直播</title>
+    <link rel="stylesheet" href="../element_ui/element.css">
+    <link rel="stylesheet" href="../css/liveSelect.css">
+</head>
+
+<body>
+    <div id="app">
+        <div class="header">
+            <el-row :gutter="20">
+                <el-col :xs="12" :sm="14" :md="16" :lg="18" :xl="20">
+                    <div class="tips">
+                        <span><i slot="suffix"
+                                class="el-icon-info defaultSize"></i>请先选择班级，然后点击“开始直播”进行直播；已选中需直播的班级点击“直播班级”查看。</span>
+                    </div>
+                </el-col>
+                <el-col :xs="12" :sm="10" :md="8" :lg="6" :xl="4">
+                    <div class="btn">
+                        <el-button icon="el-icon-video-play" type="primary" plain>开始直播</el-button>
+                        <el-button icon="el-icon-data-analysis" type="warning" plain @click="showTable">直播课堂(11)
+                        </el-button>
+                    </div>
+                </el-col>
+            </el-row>
+            <div class="line"></div>
+            <el-row v-if="isOnline">
+                <el-col :span="24">
+                    <div class="onlive">
+                        <div class="img">
+                            <img src="../img/onlingbg.jpg" alt="">
+                        </div>
+                        <div class="liveTips defaultSize">正在直播中，若返回直播间，请点击下方按钮返回直播间~</div>
+                        <div class="backBtn">
+                            <el-button class="themeColor" icon="el-icon-video-camera-solid defaultSize">返回直播间
+                            </el-button>
+                        </div>
+                    </div>
+                </el-col>
+            </el-row>
+            <el-row v-else>
+                <el-col :xs="12" :sm="14" :md="16" :lg="18" :xl="20">
+                    <el-tabs type="border-card">
+                        <el-tab-pane label="校内">
+                            <el-collapse v-model="activeIn" accordion @change="collapseChange">
+                                <el-collapse-item v-for="(item,index) in dataList" :key="index" :name="item.id">
+                                    <template slot="title">
+                                        <i v-if="activeIn != item.id" class=" el-icon-caret-bottom defaultSize"></i>
+                                        <i v-else class=" el-icon-caret-right defaultSize"></i>
+                                        {{item.title}}
+                                        <span>当前选中{{item.activeNum}}</span>
+                                    </template>
+                                    <el-row :gutter="10">
+                                        <el-col :span="6" v-for="(i,k) in item.children" :key="k">
+                                            <el-card shadow="hover" @click.native="selectClass(k)">
+                                                <div>{{i.major}}</div>
+                                                <div>{{i.className}}</div>
+                                                <div class="select">
+                                                    <img v-if=" selectKey == k" src="../img/select_act.png" alt="">
+                                                    <img v-else src="../img/select_un.png" alt="">
+                                                </div>
+                                            </el-card>
+                                        </el-col>
+                                    </el-row>
+
+                                </el-collapse-item>
+                            </el-collapse>
+                        </el-tab-pane>
+                        <el-tab-pane label="校外">
+                            <el-collapse v-model="activeOut" accordion @change="collapseChange">
+                                <el-collapse-item v-for="(item,index) in dataList" :key="index" :name="item.id">
+                                    <template slot="title">
+                                        <i v-if="activeOut != item.id" class=" el-icon-caret-bottom defaultSize"></i>
+                                        <i v-else class=" el-icon-caret-right defaultSize"></i>
+                                        {{item.title}}
+                                        <span>当前选中{{item.activeNum}}</span>
+                                    </template>
+                                    <el-row :gutter="10">
+                                        <el-col :span="6" v-for="(i,k) in item.children" :key="k">
+                                            <el-card @click.native="selectClass(k)" class="defaultSize"
+                                                :class="{'borderAct' : selectKey == k }" shadow="hover">
+                                                <div>{{i.major}}</div>
+                                                <div>{{i.className}}</div>
+                                                <div class="select">
+                                                    <img v-if=" selectKey == k" src="../img/select_act.png" alt="">
+                                                    <img v-else src="../img/select_un.png" alt="">
+                                                </div>
+                                            </el-card>
+                                        </el-col>
+                                    </el-row>
+
+                                </el-collapse-item>
+                            </el-collapse>
+                        </el-tab-pane>
+                    </el-tabs>
+                </el-col>
+                <el-col :xs="12" :sm="10" :md="8" :lg="6" :xl="4">
+                    <div class="right">
+                        <div class="rightTitle">
+                            <div>我的班级</div>
+                            <span>当前选中<span>4</span>个</span>
+                        </div>
+                        <el-card shadow="hover" @click.native="selectClass(o)" v-for="o in 6" :key="o">
+                            <div>专业</div>
+                            <div>班级</div>
+                            <div class="select">
+                                <img v-if=" selectKey == o" src="../img/select_act.png" alt="">
+                                <img v-else src="../img/select_un.png" alt="">
+                            </div>
+                        </el-card>
+                    </div>
+                </el-col>
+            </el-row>
+        </div>
+
+
+        <!-- 班级弹框 -->
+        <el-dialog title="直播班级" :visible.sync="dialogTableClassroom" center>
+            <el-table :data="gridData">
+                <el-table-column prop="name" label="班级" width="auto"></el-table-column>
+                <el-table-column label="操作" width="200">
+                    <template slot-scope="scope">
+                        <el-button @click="delItem(scope.row)" type="text" size="small">删除</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogTableClassroom = false">取 消</el-button>
+                <el-button type="primary" @click="dialogTableClassroom = false">确 定</el-button>
+            </span>
+        </el-dialog>
+    </div>
+
+
+
+
+    <script src="../element_ui/vue.js"></script>
+    <script src="../element_ui/element.js"></script>
+    <script src="../js/liveSelect.js"></script>
+</body>
+
+</html>

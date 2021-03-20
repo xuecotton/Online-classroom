@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>课堂直播</title>
+    <link rel="stylesheet" href="../element_ui/element.css">
+    <link rel="stylesheet" href="../css/liveClass.css">
+    
+</head>
+
+<body>
+    <div id="app">
+        <div class="content">
+            <div class="header">
+                <el-row :gutter="10">
+                    <el-col :xs="{span: 14, offset: 0}" :sm="{span:12, offset: 0}" :md="{span:10, offset: 0}" :lg="{span: 8, offset: 0}">
+                        <div class="searchBox">
+                            <el-input placeholder="请输入内容"  v-model="keyWord">
+                                <i slot="prefix" class="el-input__icon el-icon-search defaultSize"></i>
+                                <template slot="append">
+                                    <el-button  class="themeColor" @click="search">搜索</el-button>
+                                </template>
+                              </el-input>
+                        </div>
+                        
+                    </el-col>
+                    <el-col :span="2" >
+                        <div class="additem">
+                            <el-button @click="additem">新增</el-button>
+                        </div>
+                    </el-col>
+                </el-row>
+            </div>
+            <div class="list">
+                <el-card  :body-style="{ padding: '0px'}" v-for="(item, index) in dataList" :key="index">
+                    <img src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png" class="image">
+                    <div class="cardContent">
+                      <span>{{item.title}}</span>
+                      <div class="bottom clearfix">
+                        <el-button type="text" class="button">{{item.author}}</el-button>
+                      </div>
+                    </div>
+                    <div class="cardMask">
+                        <div class="del">
+                            <el-button icon="el-icon-delete" @click="delItem(index)">删除</el-button>
+                        </div>
+                        <div class="toLive">
+                            <el-button icon="el-icon-video-play" class="themeColor" @click="toVideo(index)">去直播</el-button>
+                        </div>
+                    </div>
+                </el-card>
+            </div>
+        </div>
+    </div>
+    <script src="../element_ui/vue.js"></script>
+    <script src="../element_ui/element.js"></script>
+    <script src="../js/liveClass.js"></script>
+</body>
+<style>
+
+</style>
+
+</html>

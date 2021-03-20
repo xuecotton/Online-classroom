@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>录播</title>
+    <link rel="stylesheet" href="../element_ui/element.css">
+    <link rel="stylesheet" href="../css/recording.css">
+</head>
+<body>
+    <div id="app">
+        <div class="content">
+            <!-- <el-tabs v-model="editableTabsValue" type="card" closable @tab-remove="removeTab"> -->
+                <el-tabs v-model="editableTabsValue" type="card" >
+                <el-tab-pane
+                  v-for="(item, index) in editableTabs"
+                  :key="item.name"
+                  :label="item.title"
+                  :name="item.name"
+                >
+                <el-row :gutter="10">
+                    <el-col :xs="{span: 16, offset: 0}" :sm="{span:14, offset: 0}" :md="{span:12, offset: 0}" :lg="{span: 12, offset: 0}">
+                        <div class="searchBox">
+                            <el-input placeholder="请输入内容"  v-model="keyWord">
+                                <i slot="prefix" class="el-input__icon el-icon-search defaultSize"></i>
+                                <template slot="append">
+                                    <el-button  class="themeColor" @click="search">搜索</el-button>
+                                </template>
+                              </el-input>
+                        </div>
+                    </el-col>
+                    <el-col :xs="{span: 8, offset: 0}" :sm="{span:6, offset: 4}" :md="{span:4, offset: 8}" :lg="{span: 2, offset: 10}" >
+                        <div class="additem">
+                            <el-button @click="additem" icon="el-icon-plus" class="themeColor">新增录播</el-button>
+                        </div>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="10">
+                    <el-col :span="6" v-for="o in 16" :key="o" :xs="12" :sm="10" :md="8" :lg="6" :xl="4">
+                        <el-card>
+                            <div class="card">
+                                <div class="left">
+                                    <img src="../img/bgpic.jpg" alt="">
+                                </div>
+                                <div class="right">
+                                    <div alt="一个很长的很长很长的视频名字">一个很长的很长很长的视频名字</div>
+                                    <span>2021年3月16日</span>
+                                    <span>播放量：12</span>
+                                    <i class="el-icon-more"></i>
+                                </div>
+                            </div>
+                        </el-card>
+                    </el-col>
+                </el-row>
+                </el-tab-pane>
+              </el-tabs>
+        </div>
+
+
+    </div>
+
+
+    <script src="../element_ui/vue.js"></script>
+    <script src="../element_ui/element.js"></script>
+    <script src="../js/recording.js"></script>
+</body>
+</html>

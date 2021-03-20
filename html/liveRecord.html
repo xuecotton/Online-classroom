@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>直播记录</title>
+    <link rel="stylesheet" href="../element_ui/element.css">
+    <link rel="stylesheet" href="../css/liveRecord.css">
+</head>
+<body>
+    <div id="app">
+        <div class="header">
+            <el-collapse v-model="activeNames" @change="handleChange">
+                <el-collapse-item title="一致性 Consistency" name="1">
+                    <template slot="title" >
+                        <el-row :gutter="20">
+                            <el-col :lg="{span:2}" :md="{span:3}" :sm="{span:4}" :xs="{span:6}">
+                                <span class="title">课程名称</span>
+                            </el-col>
+                            <el-col :lg="{span:20}" :md="{span:18}" :sm="{span:16}" :xs="{span:12}">
+                                <el-button @click.stop="selectLession()" type="primary" size="small" plain>全部</el-button>
+                                <el-button @click.stop="selectLession(item)" size="small" type="info" plain v-for="(item,index) in lessionList" :key="index" v-if="index<4">{{item}}</el-button>
+                            </el-col>
+                            <el-col :lg="{span:2}" :md="{span:3}" :sm="{span:4}" :xs="{span:6}">
+                                <el-button size="small"   type="text" plain>更多<i class="el-icon-d-arrow-right el-icon--right"></i></el-button>
+                            </el-col>
+                        </el-row>
+                    </template>
+                  <div>
+                    <el-button  size="small" type="info" plain v-for="(item,index) in lessionList" :key="index" v-if="index>=4">{{item}}</el-button>
+                  </div>
+                </el-collapse-item>
+              </el-collapse>
+        </div>
+        <div class="Content">
+            <el-row>
+                <el-col :lg="{span:24}" :md="{span:24}" :sm="{span:24}" :xs="{span:24}">
+                    <el-table
+                        ref="multipleTable"
+                        :data="tableData"
+                        tooltip-effect="dark"
+                        style="width: 100%"
+                        @selection-change="handleSelectionChange">
+                        <el-table-column
+                        type="selection"
+                        width="55">
+                        </el-table-column>
+                        <el-table-column
+                        prop="name"
+                        label="直播编号"
+                        width="120">
+                        
+                        </el-table-column>
+                        <el-table-column
+                        prop="name"
+                        label="直播课程"
+                        width="120">
+                        </el-table-column>
+                        <el-table-column
+                        prop="address"
+                        label="直播时长"
+                        show-overflow-tooltip>
+                        </el-table-column>
+                        <el-table-column
+                        prop="address"
+                        label="开播时间"
+                        show-overflow-tooltip>
+                        </el-table-column>
+                        <el-table-column
+                        label="操作"
+                        show-overflow-tooltip>
+                        <template slot-scope="scope">
+                            <el-button type="text" size="mini" plain>删除</el-button>
+                        </template>
+                        </el-table-column>
+                    </el-table>
+                </el-col>
+            </el-row>
+            
+                    <div>
+                        <el-button icon="el-icon-delete"  plain>批量删除</el-button>
+                    </div>
+                    <el-pagination
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
+                        :current-page="currentPage4"
+                        :page-sizes="[100, 200, 300, 400]"
+                        :page-size="100"
+                        layout="total, sizes, prev, pager, next, jumper"
+                        :total="400">
+                    </el-pagination>
+                
+            
+        </div>
+
+
+    </div>
+
+    <script src="../element_ui/vue.js"></script>
+    <script src="../element_ui/element.js"></script>
+    <script src="../js/liveRecord.js"></script>
+</body>
+</html>

@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新增录播课</title>
+    <link rel="stylesheet" href="../element_ui/element.css">
+    <link rel="stylesheet" href="../css/addLesson.css">
+    <link rel="stylesheet" href="../js/dist/css/index.css">
+</head>
+
+<body>
+    <div id="app">
+        <div class="content">
+            <el-row>
+                <el-col :span="24">
+                    <el-upload v-if="showUpload" class="upload-demo" drag :on-change="handleChange"
+                        :on-remove="handleRemove" :on-success="handleScc" :on-error="handleErr" :file-list="fileList"
+                        action="https://jsonplaceholder.typicode.com/posts/" :show-file-list="false">
+                        <i class="el-icon-upload"></i>
+                        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+                    </el-upload>
+                </el-col>
+                <el-row v-if="!showUpload">
+                    <el-col :xs="{span:24}" :md="{span:18}">
+                        <div class="video">
+                            <div class="title">文件上传<span>(推荐采用mp4、flv格式，可有效缩短传输速度)</span></div>
+                            <div class="videoInfo">
+                                <img src="../img/videopic.jpg" alt="">
+                                <div>
+                                    <div>视频本地名称</div>
+                                    <span>已经上传</span>
+                                    <el-progress :percentage="percentage" :color="customColor"></el-progress>
+                                    <i class="del el-icon-circle-close" @click="delAll"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </el-col>
+                    <el-col :xs="{span:24}" :md="{span:18}">
+                        <div class="details">
+                            <div class="title">基本信息</div>
+                            <div class="item">
+                                <div class="item_title red_point">
+                                    封面设置：
+                                </div>
+                                <div class="post">
+                                    <div>
+                                        <img src="../img/bgpic.jpg" alt="">
+                                    </div>
+                                    <div>
+                                        <div>
+                                            <el-button class="themeColor"><i class="el-icon-upload"></i> 上传封面
+                                            </el-button>
+                                        </div>
+                                        <div class="post_select">
+                                            <span>可选择以下封面</span>
+                                            <ul>
+                                                <li>
+                                                    <img src="../img/bgpic.jpg" alt="">
+                                                    <img class="select_icon" v-if="1" src="../img/select_act.png"
+                                                        alt="">
+                                                    <img class="select_icon" v-else src="../img/select_un.png" alt="">
+                                                </li>
+                                                <li>
+                                                    <img src="../img/bgpic.jpg" alt="">
+                                                    <img class="select_icon" v-if="1" src="../img/select_act.png"
+                                                        alt="">
+                                                    <img class="select_icon" v-else src="../img/select_un.png" alt="">
+                                                </li>
+                                                <li>
+                                                    <img src="../img/bgpic.jpg" alt="">
+                                                    <img class="select_icon" v-if="1" src="../img/select_act.png"
+                                                        alt="">
+                                                    <img class="select_icon" v-else src="../img/select_un.png" alt="">
+                                                </li>
+                                                <li>
+                                                    <img src="../img/bgpic.jpg" alt="">
+                                                    <img class="select_icon" v-if="1" src="../img/select_act.png"
+                                                        alt="">
+                                                    <img class="select_icon" v-else src="../img/select_un.png" alt="">
+                                                </li>
+
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="item_title red_point">
+                                    课程标题：
+                                </div>
+                                <div>
+                                    <el-input v-model="lesson.title">
+                                        <template slot="append">{{lesson.title.length}}/50</template>
+                                    </el-input>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="item_title no_point">
+                                    课程题目：
+                                </div>
+                                <div>
+                                    <!-- <el-checkbox-group v-model="lesson.subject" ></el-checkbox-group>
+                                        <el-checkbox label="系统题目" value="A"></el-checkbox>
+                                        <el-checkbox label="课上题目" value="B"></el-checkbox>
+                                        <el-checkbox label="课后题目" value="C"></el-checkbox>
+                                    </el-checkbox-group> -->
+                                    <el-tooltip effect="dark" content="Top Left 提示文字" placement="top-start">
+                                        <el-checkbox label="系统题目" v-model="lesson.subject.sysSub">
+                                        </el-checkbox>
+                                    </el-tooltip>
+                                    <el-tooltip effect="dark" content="Top Left 提示文字" placement="top-start">
+                                        <el-checkbox label="课上题目" v-model="lesson.subject.onSub"></el-checkbox>
+                                    </el-tooltip>
+                                    <el-tooltip effect="dark" content="Top Left 提示文字" placement="top-start">
+                                        <el-checkbox label="课后题目" v-model="lesson.subject.afterSub"></el-checkbox>
+                                    </el-tooltip>
+
+                                    <div class="sub_box">
+                                        <div v-if="lesson.subject.sysSub">
+                                            <div>
+                                                系统题目
+                                            </div>
+                                            <div>
+                                                <span>是否随机显示：</span>
+                                                <el-radio-group v-model="radio">
+                                                    <el-radio :label="3">是</el-radio>
+                                                    <el-radio :label="6">否</el-radio>
+                                                </el-radio-group>
+                                            </div>
+                                            <div>
+                                                <span>每人题目数量：</span>
+                                                <el-input></el-input>
+                                            </div>
+
+                                        </div>
+                                        <div v-if="lesson.subject.onSub">
+                                            <div>
+                                                课上题目
+                                            </div>
+                                            <div>
+                                                <span>是否随机显示：</span>
+                                                <el-radio-group v-model="radio">
+                                                    <el-radio :label="3">是</el-radio>
+                                                    <el-radio :label="6">否</el-radio>
+                                                </el-radio-group>
+                                            </div>
+                                            <el-table
+                                                :data="tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
+                                                style="width: 100%">
+                                                <el-table-column show-overflow-tooltip width="50">
+                                                    <template slot-scope="scope">
+                                                        <span>{{scope.$index + 1}}</span>
+                                                    </template>
+                                                </el-table-column>
+                                                <el-table-column prop="type" show-overflow-tooltip width="120">
+                                                </el-table-column>
+                                                <el-table-column prop="name" show-overflow-tooltip>
+                                                </el-table-column>
+                                                <el-table-column align="right" show-overflow-tooltip width="140">
+                                                    <template slot-scope="scope">
+                                                        <i class="icon el-icon-sort-up"
+                                                            @click="upIndex(scope.$index,scope.row)"></i>
+                                                        <i class="icon el-icon-sort-down"
+                                                            @click="downIndex(scope.$index,scope.row)"></i>
+                                                        <i class="icon el-icon-edit"
+                                                            @click="editItem(scope.$index,scope.row)"></i>
+                                                        <i class="icon el-icon-delete"
+                                                            @click="delItem(scope.$index,scope.row)"></i>
+                                                    </template>
+                                                </el-table-column>
+                                            </el-table>
+                                            <el-button class="themeColor addSub" plain @click="addNewSub(0)">新增题目
+                                            </el-button>
+                                        </div>
+                                        <div v-if="lesson.subject.afterSub">
+                                            <div>
+                                                课后题目
+                                            </div>
+                                            <div>
+                                                <span>是否随机显示：</span>
+                                                <el-radio-group v-model="radio">
+                                                    <el-radio :label="3">是</el-radio>
+                                                    <el-radio :label="6">否</el-radio>
+                                                </el-radio-group>
+                                            </div>
+                                            <el-table
+                                                :data="tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
+                                                style="width: 100%">
+                                                <el-table-column show-overflow-tooltip width="50">
+                                                    <template slot-scope="scope">
+                                                        <span>{{scope.$index + 1}}</span>
+                                                    </template>
+                                                </el-table-column>
+                                                <el-table-column prop="type" show-overflow-tooltip width="120">
+                                                </el-table-column>
+                                                <el-table-column prop="name" show-overflow-tooltip>
+                                                </el-table-column>
+                                                <el-table-column align="right" show-overflow-tooltip width="140">
+                                                    <template slot-scope="scope">
+                                                        <i class="icon el-icon-sort-up"
+                                                            @click="upIndex(scope.$index,scope.row)"></i>
+                                                        <i class="icon el-icon-sort-down"
+                                                            @click="downIndex(scope.$index,scope.row)"></i>
+                                                        <i class="icon el-icon-edit"
+                                                            @click="editItem(scope.$index,scope.row)"></i>
+                                                        <i class="icon el-icon-delete"
+                                                            @click="delItem(scope.$index,scope.row)"></i>
+                                                    </template>
+                                                </el-table-column>
+                                            </el-table>
+                                            <el-button class="themeColor addSub" plain @click="addNewSub(1)">新增题目
+                                            </el-button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="item_title no_point">
+                                </div>
+                                <div>
+                                    <el-button class="themeColor">发布</el-button>
+                                    <el-button type="info">取消</el-button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </el-col>
+                </el-row>
+            </el-row>
+            <div>
+                <div @click="show">好的</div>
+            </div>
+        </div>
+        <el-dialog title="新增题目" :visible.sync="editSubDialog" width="800px" center :close-on-click-modal="false"
+            :close-on-press-escape="false">
+
+            <div class="dia">
+                <div class="dia_title">题目类型：</div>
+                <div>
+                    <el-radio-group v-model="radio">
+                        <el-radio :label="1">选择题</el-radio>
+                        <el-radio :label="2">判断题</el-radio>
+                    </el-radio-group>
+                    <el-radio-group v-model="radio1" v-if="radio == 1">
+                        <el-radio :label="9">单选题</el-radio>
+                        <el-radio :label="8">多选题</el-radio>
+                    </el-radio-group>
+                </div>
+            </div>
+            <div class="dia">
+                <div class="dia_title">题目类型：</div>
+                <!-- 判断 -->
+                <div class="dia_detail" v-if="radio == 2">
+                    <div>
+                        <span>题目：</span>
+                        <el-input type="textarea" v-model="boxJud.title"></el-input>
+                    </div>
+                    <div>
+                        <span>正确答案：</span>
+                        <div>
+                            <el-radio-group v-model="boxJud.answer">
+                                <el-radio label="正确"></el-radio>
+                                <el-radio label="错误"></el-radio>
+                            </el-radio-group>
+                        </div>
+                    </div>
+                </div>
+                <!-- 单选 -->
+                <div class="dia_detail" v-if="radio == 1 && radio1 == 9">
+                    <div>
+                        <span>题目：</span>
+                        <el-input type="textarea" v-model="boxSingle.title"></el-input>
+                    </div>
+                    <div>
+                        <span>选项：</span>
+                        <div>
+                            <ul>
+                                <li>
+                                    <span>A:</span>
+                                    <el-input type="textarea"></el-input>
+                                    <el-button>删除</el-button>
+                                </li>
+                                <li>
+                                    <span>B:</span>
+                                    <el-input type="textarea"></el-input>
+                                    <el-button>删除</el-button>
+                                </li>
+                                <li>
+                                    <span>C:</span>
+                                    <el-input type="textarea"></el-input>
+                                    <el-button>删除</el-button>
+                                </li>
+                                <li>
+                                    <span>D:</span>
+                                    <el-input type="textarea"></el-input>
+                                    <el-button>删除</el-button>
+                                </li>
+                            </ul>
+                            <el-button style="float: right;">新增选项</el-button>
+                        </div>
+                    </div>
+                    <div>
+                        <span>正确答案：</span>
+                        <div>
+                            <el-radio-group v-model="boxSingle.answer">
+                                <el-radio label="A"></el-radio>
+                                <el-radio label="B"></el-radio>
+                                <el-radio label="C"></el-radio>
+                                <el-radio label="D"></el-radio>
+                            </el-radio-group>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- 多选 -->
+                <div class="dia_detail" v-if="radio == 1 && radio1 == 8">
+                    <div>
+                        <span>题目：</span>
+                        <el-input type="textarea" v-model="boxMult.title"></el-input>
+                    </div>
+                    <div>
+                        <span>选项：</span>
+                        <div>
+                            <ul>
+                                <li>
+                                    <span>A:</span>
+                                    <el-input type="textarea"></el-input>
+                                    <el-button>删除</el-button>
+                                </li>
+                                <li>
+                                    <span>B:</span>
+                                    <el-input type="textarea"></el-input>
+                                    <el-button>删除</el-button>
+                                </li>
+                                <li>
+                                    <span>C:</span>
+                                    <el-input type="textarea"></el-input>
+                                    <el-button>删除</el-button>
+                                </li>
+                                <li>
+                                    <span>D:</span>
+                                    <el-input type="textarea"></el-input>
+                                    <el-button>删除</el-button>
+                                </li>
+                            </ul>
+                            <el-button style="float: right;">新增选项</el-button>
+                        </div>
+                    </div>
+                    <div>
+                        <span>正确答案：</span>
+                        <div>
+                            <el-checkbox-group v-model="boxMult.answer">
+                                <el-checkbox label="A"></el-checkbox>
+                                <el-checkbox label="B"></el-checkbox>
+                                <el-checkbox label="C"></el-checkbox>
+                                <el-checkbox label="D"></el-checkbox>
+                            </el-checkbox-group>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="editSubDialog = false">提 交</el-button>
+                <el-button @click="editSubDialog = false">取 消</el-button>
+            </span>
+        </el-dialog>
+        <mavon-editor v-model="Content" />
+
+    </div>
+
+
+    <script src="../element_ui/vue.js"></script>
+    <script src="../element_ui/element.js"></script>
+    <script src="../js/dist/mavon-editor.js"></script>
+    <script type="module" src="../js/addLesson.js"></script>
+    <script>
+        console.log(MavonEditor);
+
+    </script>
+</body>
+
+</html>
